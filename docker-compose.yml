@@ -1,0 +1,66 @@
+---
+
+services:
+  ## Eureka Server
+  discovery:
+    image: discovery:latest
+    build: ./discovery
+    container_name: discovery
+    ports:
+      - "8761:8761"
+
+  gateway:
+    image: gateway:latest
+    build: ./gateway
+    container_name: gateway
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    depends_on:
+      - discovery
+
+  ## Folder-Service Docker Compose Config
+  folder:
+    container_name: folderservice
+    image: folder:latest
+    build: ./folder
+    depends_on:
+      - discovery
+      - gateway
+
+  ## Todo-Service Docker Compose Config
+  todo:
+    container_name: todoservice
+    image: todo:latest
+    build: ./todo
+    depends_on:
+      - discovery
+      - gateway
+
+  ## Share-Service Docker Compose Config
+  share:
+    container_name: shareservice
+    image: share:latest
+    build: ./share
+    depends_on:
+      - discovery
+      - gateway
+
+  ## User-Service Docker Compose Config
+  user:
+    container_name: userservice
+    image: user:latest
+    build: ./user
+    depends_on:
+      - discovery
+      - gateway
+
+  ## Auth-Service Docker Compose Config
+  authentication:
+    container_name: authenticationservice
+    image: authentication:latest
+    build: ./authentication
+    depends_on:
+      - discovery
+      - gateway
